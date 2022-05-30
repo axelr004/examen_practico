@@ -1,16 +1,14 @@
 package com.example.examenpractico;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,8 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,7 +70,7 @@ public class Login extends AppCompatActivity {
         String url  = "https://examenpractico2022.000webhostapp.com";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response ->{
-                    System.out.println("APPMSG: "+response);
+                    System.out.println("APPMSG: API RESPONSE "+response);
                     try {
                         JSONObject json = new JSONObject(response);
                         String strTipoRespuesta = json.getString("type");
@@ -99,7 +95,7 @@ public class Login extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("id", strId);
-                params.put("contraseña", strContrasena);
+                params.put("contrasena", strContrasena);
                 return params;
             }
         };
