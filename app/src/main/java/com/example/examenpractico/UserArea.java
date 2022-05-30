@@ -1,23 +1,11 @@
 package com.example.examenpractico;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-public class UserArea extends AppCompatActivity {
-
-    GoogleSignInOptions gso;
-    GoogleSignInClient gsc;
+public class UserArea extends ConnectedObject {
 
     TextView textViewUser;
     Button btnCerrarSesion;
@@ -26,9 +14,6 @@ public class UserArea extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_area);
-
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
-        gsc = GoogleSignIn.getClient(this, gso);
 
         textViewUser = findViewById(R.id.textViewUser);
         String strUserInfo = "";
@@ -39,35 +24,14 @@ public class UserArea extends AppCompatActivity {
         textViewUser.setText(strUserInfo);
 
         btnCerrarSesion = findViewById(R.id.buttonCerrarSesion);
-        btnCerrarSesion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cerrarSesion();
-            }
-        });
-    }
-
-    private void cerrarSesion(){
-        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(Task<Void> task) {
-                finish();
-                startActivity(new Intent(getApplicationContext(), Login.class));
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        gsc.signOut();
+        btnCerrarSesion.setOnClickListener(view -> cerrarSesion());
     }
 
     @Override
     public void onBackPressed(){
+        //Previene que se pueda regresar al login con las opciones de navegacion
         moveTaskToBack(true);
     }
-
 
 
 }

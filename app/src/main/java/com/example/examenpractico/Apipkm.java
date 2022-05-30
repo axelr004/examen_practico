@@ -1,8 +1,7 @@
 package com.example.examenpractico;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,22 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import android.content.Context;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 
 import com.android.volley.AuthFailureError;
@@ -44,23 +27,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-
-public class Apipkm extends AppCompatActivity {
+public class Apipkm extends ConnectedObject {
 
     ImageView imageView;
     TextView textViewNombre,tipo,id,height,weight;
@@ -73,6 +41,8 @@ public class Apipkm extends AppCompatActivity {
     List<String> datos = new ArrayList<String>();
     ListView lstDatos;
 
+    TextView textViewUser;
+    Button btnCerrarSesion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +53,7 @@ public class Apipkm extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
         Butonget = findViewById(R.id.Butonget);
         editTextNombre = findViewById(R.id.editTextNombre);
-        textViewNombre = findViewById(R.id.textViewNombre);
+        textViewNombre = findViewById(R.id.nombre);
 
         id = findViewById(R.id.id);
         weight = findViewById(R.id.weight);
@@ -101,7 +71,19 @@ public class Apipkm extends AppCompatActivity {
 
         System.out.println("MSG " + datos.size());
 
+        textViewUser = findViewById(R.id.textViewUser);
+        String strUserInfo = "";
+        Intent intent = getIntent();
+        strUserInfo += "\n"+intent.getStringExtra("id");
+        strUserInfo += "\n"+intent.getStringExtra("nombre");
+        strUserInfo += "\n"+intent.getStringExtra("correo");
+        textViewUser.setText(strUserInfo);
+
+        btnCerrarSesion = findViewById(R.id.buttonCerrarSesion);
+        btnCerrarSesion.setOnClickListener(view -> cerrarSesion());
+
     }
+
     public void GetAPiData() {
 
         String UrlFinal = Url+ editTextNombre.getText().toString().toLowerCase();
@@ -145,6 +127,12 @@ public class Apipkm extends AppCompatActivity {
         };
         queque.add(stringRequest);
         System.out.println("Consul " + queque);
+    }
+
+    @Override
+    public void onBackPressed(){
+        //Previene que se pueda regresar al login con las opciones de navegacion
+        moveTaskToBack(true);
     }
 
 }

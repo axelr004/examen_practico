@@ -1,7 +1,8 @@
 package com.example.examenpractico;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -23,6 +24,8 @@ public class Login extends AppCompatActivity {
     EditText editTextId;
     EditText editTextPassword;
 
+    Intent serviceIntent;
+
     String strId;
     String strCorreo;
     String strNombre;
@@ -30,15 +33,27 @@ public class Login extends AppCompatActivity {
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        serviceIntent = new Intent(this, NetworkChecker.class);
+        startService(serviceIntent);
+
         setContentView(R.layout.activity_main);
         editTextId = findViewById(R.id.editTextId);
         editTextPassword = findViewById(R.id.editTextPassword);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(serviceIntent);
+        System.out.println("APPMSG: Destroying service");
     }
 
     public void normalLogin(View view) {
@@ -50,39 +65,32 @@ public class Login extends AppCompatActivity {
 
     public void googleLogin(View view){
         Intent signInIntent = gsc.getSignInIntent();
-        activityResultLauncher.launch(signInIntent);
+        startActivityForResult.launch(signInIntent);
     }
 
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
+    ActivityResultLauncher<Intent> startActivityForResult = registerForActivityResult(
+            new StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                    try{
-                        task.getResult(ApiException.class);
-                        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
-                        if(account != null){
-                            strId = account.getId();
-                            strCorreo = account.getEmail();
-                            strNombre = account.getDisplayName();
-                            goToUserArea();
-                        }
-                    } catch (ApiException e) {
-                        Toast.makeText(getApplicationContext(), "Error al tratar de iniciar sesion con google.", Toast.LENGTH_SHORT).show();
+                if (result.getResultCode() == AppCompatActivity.RESULT_OK) {
+                    GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+                    if(account != null){
+                        strId = account.getId();
+                        strCorreo = account.getEmail();
+                        strNombre = account.getDisplayName();
+                        goToUserArea();
                     }
                 }
-            });
+            }
+    );
 
-    private void goToUserArea(){
+    public void goToUserArea(){
         String strMensaje = "id: "+strId+"\nNombre: "+strNombre+"\nEmail: "+strCorreo;
         Toast.makeText(getApplicationContext(), strMensaje, Toast.LENGTH_SHORT).show();
-        Intent userAreaIntent = new Intent(this, UserArea.class);
+        Intent userAreaIntent = new Intent(this, Apipkm.class);
         userAreaIntent.putExtra("id", strId);
         userAreaIntent.putExtra("nombre", strNombre);
         userAreaIntent.putExtra("correo", strCorreo);
         startActivity(userAreaIntent);
-        finish();
     }
 
 }
