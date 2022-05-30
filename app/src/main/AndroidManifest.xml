@@ -12,11 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ExamenPractico">
+        <activity
+            android:name=".ComponentesIU"
+            android:exported="false" />
 
         <service
             android:name=".NetworkChecker"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".Apipkm"
