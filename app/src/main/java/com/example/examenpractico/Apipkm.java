@@ -34,6 +34,7 @@ public class Apipkm extends ConnectedObject {
     TextView textViewNombre,tipo,id,height,weight;
     EditText editTextNombre;
     Button Butonget;
+    Button btnInfo;
     RequestQueue queque;
 
     String Url = "https://pokeapi.co/api/v2/pokemon/" ;
@@ -81,6 +82,12 @@ public class Apipkm extends ConnectedObject {
 
         btnCerrarSesion = findViewById(R.id.buttonCerrarSesion);
         btnCerrarSesion.setOnClickListener(view -> cerrarSesion());
+
+        btnInfo = findViewById(R.id.btnInfo);
+        btnInfo.setOnClickListener(view -> {
+            Intent infoIntent = new Intent(this, ComponentesIU.class);
+            startActivity(infoIntent);
+        });
 
     }
 
