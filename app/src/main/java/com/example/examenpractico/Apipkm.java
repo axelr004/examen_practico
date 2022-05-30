@@ -3,13 +3,16 @@ package com.example.examenpractico;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,13 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 
 public class Apipkm extends ConnectedObject {
@@ -39,8 +35,7 @@ public class Apipkm extends ConnectedObject {
 
     String Url = "https://pokeapi.co/api/v2/pokemon/" ;
 
-    List<String> datos = new ArrayList<String>();
-    ListView lstDatos;
+    List<String> datos = new ArrayList<>();
 
     TextView textViewUser;
     Button btnCerrarSesion;
@@ -61,12 +56,7 @@ public class Apipkm extends ConnectedObject {
         height = findViewById(R.id.height);
         tipo = findViewById(R.id.tipos);
 
-        Butonget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GetAPiData();
-            }
-        });
+        Butonget.setOnClickListener(v -> GetAPiData());
 
         queque = Volley.newRequestQueue(getApplicationContext());
 
@@ -127,9 +117,8 @@ public class Apipkm extends ConnectedObject {
                     System.out.println("APPMSG: "+error.toString());
                 }){
             @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                return params;
+            protected Map<String, String> getParams() {
+                return new HashMap<>();
             }
         };
         queque.add(stringRequest);

@@ -7,7 +7,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -15,7 +14,7 @@ public class NetworkChecker extends Service {
 
     private boolean run = true;
     private final IBinder binder = new LocalBinder();
-    private ArrayList<ServiceCallBacks> serviceCallbacks = new ArrayList<>();
+    private final ArrayList<ServiceCallBacks> serviceCallbacks = new ArrayList<>();
 
     public class LocalBinder extends Binder {
         NetworkChecker getService() {
@@ -39,6 +38,7 @@ public class NetworkChecker extends Service {
         serviceCallbacks.add(callbacks);
     }
 
+    @SuppressWarnings("BusyWait")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         new Thread(
