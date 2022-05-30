@@ -51,25 +51,23 @@ public class ComponentesIU extends AppCompatActivity {
     }
     public  void buscar(){
         String plan = "3743";
-
+        String nombre = "";
         if(result.equals("David")){
-            result = "German David Estrada Holguin - 2013122";
+            nombre = "German David Estrada Holguin - 2013122";
         } else if(result.equals("Nicolas")){
-            result = "Nicolas Felipe Victoria Rodriguez - 1767315";
+            nombre = "Nicolas Felipe Victoria Rodriguez - 1767315";
         } else if(result.equals("Cristhian")){
-            result = "Cristhian Camilo Lozano - 2067818";
+            nombre = "Cristhian Camilo Lozano - 2067818";
         } else if(result.equals("Alexander")){
-            result = "Alexander Ramirez Bohorquez - 1556236";
+            nombre = "Alexander Ramirez Bohorquez - 1556236";
             plan = "2711";
         }
         String adicional = "";
 
         if(checkBox.isChecked()){
-
-            adicional = "\nPlan: "+plan+"\n Universidad del Valle";
-
+            adicional = "\nPlan: "+plan+"\nUniversidad del Valle";
         }
-        informacion.setText(result + adicional);
+        informacion.setText(nombre + adicional);
 
     }
 }
