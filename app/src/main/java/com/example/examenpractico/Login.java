@@ -12,12 +12,23 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
 
@@ -57,10 +68,43 @@ public class Login extends AppCompatActivity {
     }
 
     public void normalLogin(View view) {
-        String strMensaje = "id: " + editTextId.getText().toString() + "\nContrasena :" +
-                editTextPassword.getText().toString();
-        Toast toast = Toast.makeText(getApplicationContext(), strMensaje, Toast.LENGTH_SHORT);
-        toast.show();
+        String strId = editTextId.getText().toString();
+        String strContrasena = editTextPassword.getText().toString();
+        RequestQueue requestQueue;
+        String url  = "https://examenpractico2022.000webhostapp.com";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                response ->{
+                    System.out.println("APPMSG: "+response);
+                    try {
+                        JSONObject json = new JSONObject(response);
+                        String strTipoRespuesta = json.getString("type");
+                        if(strTipoRespuesta.equals("success")){
+                            this.strId = json.getJSONObject("data").getString("id");
+                            this.strCorreo = json.getJSONObject("data").getString("correo");
+                            this.strNombre = json.getJSONObject("data").getString("nombre");
+                            goToUserArea();
+                        } else {
+                            String feedback = json.getString("data");
+                            Toast.makeText(getApplicationContext(), feedback, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error ->{
+                    Toast.makeText(getApplicationContext(), "error", Toast.LENGTH_SHORT).show();
+                    System.out.println("APPMSG: "+error.toString());
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id", strId);
+                params.put("contraseña", strContrasena);
+                return params;
+            }
+        };
+        requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
     public void googleLogin(View view){
